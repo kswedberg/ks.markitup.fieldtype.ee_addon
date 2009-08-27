@@ -14,6 +14,8 @@ if ( !defined('EXT')) { exit('Invalid file request'); }
 
 class Ks_markitup extends Fieldframe_Fieldtype {
 
+  var $parse_images = true;
+
   var $info = array(
     'name'              => 'KS Markitup',
     'version'           => '1.0.0',
@@ -26,7 +28,6 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     'markitup_set' => 'default',
     'markitup_skin' => 'simple'
   );
-
 
   /**
     * Display Site Settings
@@ -75,7 +76,8 @@ class Ks_markitup extends Fieldframe_Fieldtype {
   
   function display_field($field_name, $field_data, $field_settings) {
     global $DSP;
-
+    
+    //TODO: get the real field_id another way. there must be a better way.
     $field_id = str_replace('field_id_' , '', $field_name);
   	// Get the markitup set
 	  $markitup_set = 'default';
@@ -97,9 +99,10 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     $this->include_js('markitup/jquery.markitup.js');
     $this->include_js('markitup/sets/' . $markitup_set . '/set.js');
     $this->include_js('markitup/sets/' . $markitup_set . '/init.js');
-    
+
     $field_class = 'ksmarkitup-' . $markitup_set;
     $field_output = $DSP->input_textarea($field_name, $field_data, '10', $field_class, '100%');
+
 
     /** TODO: CHANGE THIS LATER
     ************************************************************
@@ -116,16 +119,35 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     }
     /** end hack **********************************************/
     
+    echo $this->get_parse_options();
     return $field_output . $formatting_buttons;
 
   }
 
+  function display_tag($params, $tagdata, $field_data, $field_settings) {
+    global $TMPL, $FF;
+    $this_row = $FF->weblog->query->row;
+    $parse_options = array(
+      'html_format'   => $this_row['weblog_html_formatting'],
+      'auto_links'    => $this_row['weblog_auto_link_urls'],
+      'allow_img_url' => $this_row['weblog_allow_img_urls'],
+      'parse_images' => $this->parse_images
+    );
+    
+    if ( ! class_exists('Typography')) {
+      require PATH_CORE.'core.typography'.EXT;
+    }
+    $TYPE = new Typography;
 
+    $parsed_contents = $TYPE->parse_type( $field_data, $parse_options );
+
+    return $parsed_contents;
+  }
 
   function display_cell($cell_name, $cell_data, $cell_settings) {
     return $this->display_field($cell_name, $cell_data, $cell_settings);
   }
-
+    
   function get_current_formatting($id) {
     global $DB, $DSP, $LANG, $IN;
     $ks_def_formatting = 'none';
@@ -218,9 +240,10 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     return $r;
   }
 
-
-    /* END class */
+  
+  /* END class */
 }
   
 /* End of file ft.ks_markitup.php */
 /* Location: ./system/extensions/fieldtypes/ks_markitup/ft.ks_markitup.php */
+    
