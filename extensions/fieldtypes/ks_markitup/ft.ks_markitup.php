@@ -12,17 +12,14 @@
 
 if ( !defined('EXT')) { exit('Invalid file request'); }
 
-
 class Ks_markitup extends Fieldframe_Fieldtype {
 
   var $info = array(
     'name'              => 'KS Markitup',
     'version'           => '1.0.0',
     'desc'              => 'Use Markitup in FieldFrame',
-    'docs_url'          => 'http://www.learningjquery.com/',
-    'versions_xml_url'  => 'http://www.learningjquery.com/',
+    'docs_url'          => 'http://github.com/kswedberg/ks.markitup.fieldtype.ee_addon/',
     'no_lang'           => true
-
   );
 
   var $default_site_settings = array(
@@ -104,13 +101,20 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     $field_class = 'ksmarkitup-' . $markitup_set;
     $field_output = $DSP->input_textarea($field_name, $field_data, '10', $field_class, '100%');
 
-    //TODO: CHANGE THIS LATER. temporary hack because display_field is getting called in the display_field_settings page and it's borking things
+    /** TODO: CHANGE THIS LATER
+    ************************************************************
+    * Temporary hack because I can't figure out how to get the field_id in a consistent manner.
+    * field settings page is returning field_id as ftype[ftype_id_3][preview], causing DB error.
+    * Query: SELECT field_fmt FROM exp_weblog_fields WHERE field_id = ftype[ftype_id_3][preview]
+    * Not sure why display_field is being called in the field settings page anyway?
+    ************************************************************/
     if (strpos($field_id, 'ftype') === false) {
       $current_formatting = $this->get_current_formatting($field_id);
       $formatting_buttons = $this->_text_formatting_buttons($field_id, $current_formatting);
     } else {
       $formatting_buttons = '';
     }
+    /** end hack **********************************************/
     
     return $field_output . $formatting_buttons;
 
@@ -218,5 +222,5 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     /* END class */
 }
   
-    /* End of file ft.ks_markitup.php */
-    /* Location: ./system/extensions/fieldtypes/ks_markitup/ft.ks_markitup.php */
+/* End of file ft.ks_markitup.php */
+/* Location: ./system/extensions/fieldtypes/ks_markitup/ft.ks_markitup.php */
