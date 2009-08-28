@@ -14,8 +14,6 @@ if ( !defined('EXT')) { exit('Invalid file request'); }
 
 class Ks_markitup extends Fieldframe_Fieldtype {
 
-  var $parse_images = true;
-
   var $info = array(
     'name'              => 'KS Markitup',
     'version'           => '1.0.0',
@@ -119,7 +117,6 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     }
     /** end hack **********************************************/
     
-    echo $this->get_parse_options();
     return $field_output . $formatting_buttons;
 
   }
@@ -127,11 +124,12 @@ class Ks_markitup extends Fieldframe_Fieldtype {
   function display_tag($params, $tagdata, $field_data, $field_settings) {
     global $TMPL, $FF;
     $this_row = $FF->weblog->query->row;
+    $parse_images = $FF->weblog->TYPE->parse_images;
     $parse_options = array(
       'html_format'   => $this_row['weblog_html_formatting'],
       'auto_links'    => $this_row['weblog_auto_link_urls'],
       'allow_img_url' => $this_row['weblog_allow_img_urls'],
-      'parse_images' => $this->parse_images
+      'parse_images' => $parse_images
     );
     
     if ( ! class_exists('Typography')) {
