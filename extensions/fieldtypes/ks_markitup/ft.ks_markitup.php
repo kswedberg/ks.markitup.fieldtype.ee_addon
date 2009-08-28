@@ -107,16 +107,23 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     } else {
       $formatting_buttons = '';
     }
-
+    
     return $field_output . $formatting_buttons;
 
   }
 
+  function display_cell($cell_name, $cell_data, $cell_settings) {
+    return $this->display_field($cell_name, $cell_data, $cell_settings);
+  }
+    
+
   function display_tag($params, $tagdata, $field_data, $field_settings) {
     global $TMPL, $FF;
     $this_row = $FF->weblog->query->row;
+    $this_field_id = $FF->field_id;
     $parse_images = $FF->weblog->TYPE->parse_images;
     $parse_options = array(
+      'text_format' => $this_row['field_ft_' . $this_field_id],
       'html_format'   => $this_row['weblog_html_formatting'],
       'auto_links'    => $this_row['weblog_auto_link_urls'],
       'allow_img_url' => $this_row['weblog_allow_img_urls'],
@@ -131,17 +138,15 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     $parsed_contents = $TYPE->parse_type( $field_data, $parse_options );
 
     return $parsed_contents;
-  }
+}
 
-  function display_cell($cell_name, $cell_data, $cell_settings) {
-    return $this->display_field($cell_name, $cell_data, $cell_settings);
-  }
-    
+  
   function get_current_formatting($id) {
     global $DB, $FF, $IN;
     $ks_def_formatting = 'none';
     $current_format = NULL;
     $entry_id = $IN->GBL('entry_id', 'GET');
+    // $entry_id = $FF->row->entry_id;
 
     if ($entry_id) {
        $q = $DB->query("SELECT field_ft_{$id} FROM exp_weblog_data WHERE entry_id = {$entry_id};");
@@ -203,7 +208,6 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     }
 
     // Display Format Select
-  
     $r .= '<select name="field_ft_'.$id.'" class="select mrkitup">'.NL;
     foreach($fmt_opt as $fmt) {
       $name = ucwords(str_replace('_',' ',$fmt));
