@@ -73,10 +73,10 @@ class Ks_markitup extends Fieldframe_Fieldtype {
   }
   
   function display_field($field_name, $field_data, $field_settings) {
-    global $DSP;
+    global $DSP, $FF, $IN;
     
-    //TODO: get the real field_id another way. there must be a better way.
-    $field_id = str_replace('field_id_' , '', $field_name);
+    $field_id = $FF->row['field_id'];
+    
   	// Get the markitup set
 	  $markitup_set = 'default';
 
@@ -101,22 +101,13 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     $field_class = 'ksmarkitup-' . $markitup_set;
     $field_output = $DSP->input_textarea($field_name, $field_data, '10', $field_class, '100%');
 
-
-    /** TODO: CHANGE THIS LATER
-    ************************************************************
-    * Temporary hack because I can't figure out how to get the field_id in a consistent manner.
-    * field settings page is returning field_id as ftype[ftype_id_3][preview], causing DB error.
-    * Query: SELECT field_fmt FROM exp_weblog_fields WHERE field_id = ftype[ftype_id_3][preview]
-    * Not sure why display_field is being called in the field settings page anyway?
-    ************************************************************/
-    if (strpos($field_id, 'ftype') === false) {
+    if ($field_id) {
       $current_formatting = $this->get_current_formatting($field_id);
       $formatting_buttons = $this->_text_formatting_buttons($field_id, $current_formatting);
     } else {
       $formatting_buttons = '';
     }
-    /** end hack **********************************************/
-    
+
     return $field_output . $formatting_buttons;
 
   }
@@ -147,7 +138,7 @@ class Ks_markitup extends Fieldframe_Fieldtype {
   }
     
   function get_current_formatting($id) {
-    global $DB, $DSP, $LANG, $IN;
+    global $DB, $FF, $IN;
     $ks_def_formatting = 'none';
     $current_format = NULL;
     $entry_id = $IN->GBL('entry_id', 'GET');
@@ -163,13 +154,10 @@ class Ks_markitup extends Fieldframe_Fieldtype {
      // Decide between Default and Current Formats (i.e. discard NULLs)
     
     // if there is a current format selected....
-     if ($curr_format) {
+     if ($current_format) {
        $ks_def_formatting = $current_format;
      } else {
-       $query = $DB->query("SELECT field_fmt FROM exp_weblog_fields WHERE field_id = {$id};");
-       if ($query->num_rows > 0) {
-         $ks_def_formatting = $query->row['field_fmt'];
-       } 
+       $ks_def_formatting = $FF->row['field_fmt'];
      }
     return $ks_def_formatting;
   }
@@ -244,4 +232,3 @@ class Ks_markitup extends Fieldframe_Fieldtype {
   
 /* End of file ft.ks_markitup.php */
 /* Location: ./system/extensions/fieldtypes/ks_markitup/ft.ks_markitup.php */
-    
