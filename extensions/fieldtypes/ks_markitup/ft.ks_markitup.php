@@ -55,7 +55,7 @@ class Ks_markitup extends Fieldframe_Fieldtype {
 
 
   function display_field_settings($field_settings) {
-    	global $FFSD;
+      global $FFSD;
 
       // initialize Fieldframe_SettingsDisplay
       if ( ! isset($FFSD)) {
@@ -65,10 +65,10 @@ class Ks_markitup extends Fieldframe_Fieldtype {
       $cell2_output = $FFSD->label('Markitup Set', 'leave blank to use the site\'s default markitup set');
       $cell2_output .= $FFSD->text('markitup_set', $markitup_set);
       
-  		return array(
-  		  'formatting_available' => true,
-  		  'cell2' => $cell2_output,
-  		);
+      return array(
+        'formatting_available' => true,
+        'cell2' => $cell2_output,
+      );
     
   }
   
@@ -77,16 +77,16 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     
     $field_id = $FF->row['field_id'];
     
-  	// Get the markitup set
-	  $markitup_set = 'default';
+    // Get the markitup set
+    $markitup_set = 'default';
 
-  	if (isset($field_settings['markitup_set']) && !empty($field_settings['markitup_set'])) {
-  	  $markitup_set = $field_settings['markitup_set'];
-  	} elseif (isset($this->site_settings['markitup_set'])) {
-  	  $markitup_set = $this->site_settings['markitup_set'];
-  	} 
-  	
-  	// Get the markitup skin
+    if (isset($field_settings['markitup_set']) && !empty($field_settings['markitup_set'])) {
+      $markitup_set = $field_settings['markitup_set'];
+    } elseif (isset($this->site_settings['markitup_set'])) {
+      $markitup_set = $this->site_settings['markitup_set'];
+    } 
+    
+    // Get the markitup skin
     $markitup_skin = isset($this->site_settings['markitup_skin']) ? $this->site_settings['markitup_skin'] : 'markitup';
 
     // include stylesheets
@@ -103,12 +103,13 @@ class Ks_markitup extends Fieldframe_Fieldtype {
 
     if ($field_id) {
       $current_formatting = $this->get_current_formatting($field_id);
+
       $formatting_buttons = $this->_text_formatting_buttons($field_id, $current_formatting);
     } else {
       $formatting_buttons = '';
     }
     
-    return $field_output . $formatting_buttons;
+    return $field_output . $formatting_buttons ;
 
   }
 
@@ -140,31 +141,26 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     return $parsed_contents;
 }
 
-  
+
   function get_current_formatting($id) {
     global $DB, $FF, $IN;
-    $ks_def_formatting = 'none';
-    $current_format = NULL;
+    $selected_formatting = '';
+    
     $entry_id = $IN->GBL('entry_id', 'GET');
-    // $entry_id = $FF->row->entry_id;
+    $posted_formatting = $_POST['field_ft_'.$FF->row['field_id']];
 
     if ($entry_id) {
-       $q = $DB->query("SELECT field_ft_{$id} FROM exp_weblog_data WHERE entry_id = {$entry_id};");
-       if ($q->num_rows > 0) {
-         $current_format = $q->row['field_ft_'.$id];
-         $ks_def_formatting = $current_format;
+       $query = $DB->query("SELECT field_ft_{$id} FROM exp_weblog_data WHERE entry_id = {$entry_id};");
+       if ($query->num_rows > 0) {
+         $selected_formatting = $query->row['field_ft_'.$id];
        }
-     }
-     
-     // Decide between Default and Current Formats (i.e. discard NULLs)
-    
-    // if there is a current format selected....
-     if ($current_format) {
-       $ks_def_formatting = $current_format;
+     } elseif ($posted_formatting) {
+       $selected_formatting = $posted_formatting;
      } else {
-       $ks_def_formatting = $FF->row['field_fmt'];
+       $selected_formatting = $FF->row['field_fmt'];
      }
-    return $ks_def_formatting;
+
+    return $selected_formatting;
   }
   
   function _text_formatting_buttons($id, $def_fmt) {
@@ -197,9 +193,8 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     } else {
       $spell_check = '';
     }
-  
 
-    $r = 	$DSP->div('xhtmlWrapper').$DSP->qspan('lightLinks', $spell_check).
+    $r =  $DSP->div('xhtmlWrapper').$DSP->qspan('lightLinks', $spell_check).
       $DSP->qspan('xhtmlWrapperLight', $LANG->line('newline_format'));
 
     $fmt_opt = array();
