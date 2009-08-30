@@ -104,12 +104,12 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     if ($field_id) {
       $current_formatting = $this->get_current_formatting($field_id);
 
-      $formatting_buttons = $this->_text_formatting_buttons($field_id, $current_formatting);
+      $formatting_buttons = $this->text_formatting_select($field_id, $current_formatting);
     } else {
       $formatting_buttons = '';
     }
     
-    return $field_output . $formatting_buttons ;
+    return $field_output . $formatting_buttons;
 
   }
 
@@ -147,7 +147,7 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     $selected_formatting = '';
     
     $entry_id = $IN->GBL('entry_id', 'GET');
-    $posted_formatting = $_POST['field_ft_'.$FF->row['field_id']];
+    $posted_formatting = isset($_POST['field_ft_'.$FF->row['field_id']]) ? $_POST['field_ft_'.$FF->row['field_id']] : null;
 
     if ($entry_id) {
        $query = $DB->query("SELECT field_ft_{$id} FROM exp_weblog_data WHERE entry_id = {$entry_id};");
@@ -163,16 +163,8 @@ class Ks_markitup extends Fieldframe_Fieldtype {
     return $selected_formatting;
   }
   
-  function _text_formatting_buttons($id, $def_fmt) {
+  function text_formatting_select($id, $def_fmt) {
     global $DB, $DSP, $LANG;
-    $LANG->fetch_language_file('publish_ad');
-    $spacer = NBS.NBS.NBS.NBS.'|'.NBS.NBS.NBS.NBS;
-
-    if ( ! class_exists('Publish')) {
-      require PATH_CP.'cp.publish'.EXT;
-    }
-    $PUB = new Publish();
-    $PUB->SPELL = new Spellcheck();
 
     $query = $DB->query(
       "SELECT field_fmt 
@@ -183,27 +175,14 @@ class Ks_markitup extends Fieldframe_Fieldtype {
       ORDER BY field_fmt"
     );
 
-    if ($PUB->SPELL->enabled === TRUE) {
-      if ($this->settings['misc_spellcheck'] == 'y') {
-        $spell_check = ' <a href="javascript:void(0);" onclick="toggle_spellcheck(\''.$id.'\');return false;"><b>' .
-          $LANG->line('check_spelling').'</b></a>'.$spacer;
-      } else {
-        $spell_check = '';
-      }
-    } else {
-      $spell_check = '';
-    }
-
-    $r =  $DSP->div('xhtmlWrapper').$DSP->qspan('lightLinks', $spell_check).
-      $DSP->qspan('xhtmlWrapperLight', $LANG->line('newline_format'));
-
     $fmt_opt = array();
     foreach($query->result as $res) { 
       $fmt_opt[]=$res['format']; 
     }
 
     // Display Format Select
-    $r .= '<select name="field_ft_'.$id.'" class="select mrkitup">'.NL;
+    $r = $DSP->div('xhtmlWrapper') . $DSP->qspan('xhtmlWrapperLight', $LANG->line('newline_format'));
+    $r .= '<select name="field_ft_'.$id.'" class="select mrkitup">'. NL;
     foreach($fmt_opt as $fmt) {
       $name = ucwords(str_replace('_',' ',$fmt));
 
