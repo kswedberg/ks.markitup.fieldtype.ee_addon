@@ -2,12 +2,14 @@
 
 /** =ft.ks_markitup.php
 ************************************************************
-@project      KS markItUp
-@build        August 27, 2009
+@project      ks markitup
+@build        August 31, 2009
 @author       Karl Swedberg (my first name at learningjquery dot com)
 @author      Tim Kelty
-@credit      Ryan Masuga
+@credit      Jay Salvat (http://jaysalvat.com) -- creator of the markItUp jQuery plugin
 @credit      Brandon Kelly
+@credit      Ryan Masuga
+
 ************************************************************/
 
 if ( !defined('EXT')) { exit('Invalid file request'); }
@@ -15,9 +17,9 @@ if ( !defined('EXT')) { exit('Invalid file request'); }
 class Ks_markitup extends Fieldframe_Fieldtype {
 
   var $info = array(
-    'name'              => 'KS Markitup',
-    'version'           => '1.0.0',
-    'desc'              => 'Use Markitup in FieldFrame',
+    'name'              => 'ks markitup',
+    'version'           => '1.0.1',
+    'desc'              => 'Use markItUp in FieldFrame',
     'docs_url'          => 'http://github.com/kswedberg/ks.markitup.fieldtype.ee_addon/',
     'no_lang'           => true
   );
