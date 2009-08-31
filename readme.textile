@@ -27,10 +27,8 @@ If you'd like to use a different markup set, such as Textile or Markdown, you'll
 # Add your nameSpace class for each line in the style.css file. (see the default style.css for an example)
 # Create an init.js file in your set's directory.
 # Add this short script to the init.js file:
-
-  <code>$(document).ready(function() {
+  <pre><code>$(document).ready(function() {
     $('.ksmarkitup-default').markItUp(defaultSettings);
   });
-  </code>
-
+  </code></pre>
 # In the above script, change the first "default" to the name of your set's directory. Change "defaultSettings" to the unique name you gave to the settings object in your set.js file.
