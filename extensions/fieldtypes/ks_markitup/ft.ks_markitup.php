@@ -75,7 +75,7 @@ class Ks_markitup extends Fieldframe_Fieldtype {
   function display_field($field_name, $field_data, $field_settings) {
     global $DSP, $FF, $IN;
     
-    $field_id = $FF->row['field_id'];
+    $field_id = isset($FF->row['field_id']) ? $FF->row['field_id'] : null ;
     
     // Get the markitup set
     $markitup_set = 'default';

@@ -1,0 +1,13 @@
+h1. ks.markitup
+
+h2. Requirements
+
+The ks_markitup field type requires the FieldFrame extension (http://brandon-kelly.com/fieldframe/) by Brandon Kelly.
+
+h2. Installation
+
+# download and unzip the package
+# place the contents of the package in your site's system, or equivalent, directory. Or, find the ks_markitup folder within extensions/fieldtypes/ and place it in your site's system/extensions/fieldtypes directory.
+# Enable the field type in the EE Control Panel by going to Admin &gt; Utilities &gt; Fieldtypes Manager and choosing the "Yes" radio button for KS Markitup 
+# *Optional:* set options for the default MarkItUp Set and MarkItUp Skin in the Fieldtypes Manager. If you do not set them, the MarkItUp Set will be "default" and the MarkItup Skin will be "simple."
+# Set a field to use the KS Markitup fieldtype by going to Admin &gt; Channel Administration &gt; Field Groups &gt; Custom Fields, choosing a field, and then selecting KS Markitup from the Field Type drop-down list.
