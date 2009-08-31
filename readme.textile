@@ -2,7 +2,7 @@ h1. ks.markitup
 
 h2. Requirements
 
-The ks_markitup field type requires the FieldFrame extension (http://brandon-kelly.com/fieldframe/) by Brandon Kelly.
+The ks.markitup field type requires the FieldFrame extension (http://brandon-kelly.com/fieldframe/) by Brandon Kelly.
 
 h2. Installation
 
@@ -11,3 +11,26 @@ h2. Installation
 # Enable the field type in the EE Control Panel by going to Admin &gt; Utilities &gt; Fieldtypes Manager and choosing the "Yes" radio button for KS Markitup 
 # *Optional:* set options for the default MarkItUp Set and MarkItUp Skin in the Fieldtypes Manager. If you do not set them, the MarkItUp Set will be "default" and the MarkItup Skin will be "simple."
 # Set a field to use the KS Markitup fieldtype by going to Admin &gt; Channel Administration &gt; Field Groups &gt; Custom Fields, choosing a field, and then selecting KS Markitup from the Field Type drop-down list.
+
+h2. Configuration
+
+
+h2. MarkItUp Sets Installation
+
+If you'd like to use a different markup set, such as Textile or Markdown, you'll have to do some additional configuration:
+
+# Go to http://markitup.jaysalvat.com/downloads/
+# Download the zip file
+# Unzip it in your markItUp sets folder
+# Set a nameSpace for the new set in the set.js file. (see the default set.js for an example)
+# In the set.js file, where it says *mySettings = {*, change "mySettings" to a unique name.
+# Add your nameSpace class for each line in the style.css file. (see the default style.css for an example)
+# Create an init.js file in your set's directory.
+# Add this short script to the init.js file:
+
+  <code>$(document).ready(function() {
+    $('.ksmarkitup-default').markItUp(defaultSettings);
+  });
+  </code>
+
+# In the above script, change the first "default" to the name of your set's directory. Change "defaultSettings" to the unique name you gave to the settings object in your set.js file.
