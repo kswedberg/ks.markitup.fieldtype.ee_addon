@@ -60,7 +60,7 @@ class Ks_markitup extends Fieldframe_Fieldtype {
       global $FFSD;
 
       // initialize Fieldframe_SettingsDisplay
-      if ( ! isset($FFSD)) {
+      if ( !isset($FFSD)) {
        $FFSD = new Fieldframe_SettingsDisplay();
       }
       $markitup_set = isset($field_settings['markitup_set']) ? $field_settings['markitup_set'] : '';
@@ -182,6 +182,15 @@ class Ks_markitup extends Fieldframe_Fieldtype {
       $fmt_opt[]=$res['format']; 
     }
 
+    $q2 = $DB->query(
+      "SELECT field_show_fmt
+      AS show_format
+      FROM exp_weblog_fields
+      WHERE field_id = {$id}"
+    );
+    if ($q2->result[0]['show_format'] == 'n') {
+      return '';
+    }
     // Display Format Select
     $r = $DSP->div('xhtmlWrapper') . $DSP->qspan('xhtmlWrapperLight', $LANG->line('newline_format'));
     $r .= '<select name="field_ft_'.$id.'" class="select mrkitup">'. NL;
